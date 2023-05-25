@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "448774381681",
+    "project_id": "baitho-59100",
+    "storage_bucket": "baitho-59100.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448774381681:android:fb4bd81888b1dcbcecfbd0",
+        "android_client_info": {
+          "package_name": "com.baitho"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448774381681-np4j7u527geqmulenh5e67kp4ksqai8e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.baitho",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "448774381681-da8vhof2bai3j18mjpceb7jc0hvmfm1u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5Ri2l3owDTLZ2itwHhQcqK2s1jHh6VUY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448774381681-da8vhof2bai3j18mjpceb7jc0hvmfm1u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
