@@ -15,14 +15,6 @@ import useAuth from './hooks/useAuth';
 
 const Stack = createStackNavigator();
 
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: '#fff',
-  },
-};
-
 const App = () => {
   const dispatch = useDispatch();
 
@@ -43,7 +35,7 @@ const App = () => {
 
   return (
     <NativeBaseProvider theme={theme}>
-      <NavigationContainer theme={navTheme}>
+      <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
             headerShown: false,

@@ -1,4 +1,4 @@
-import {Text, Image, Center, Heading, Box} from 'native-base';
+import {Text, Image, Center, Heading, Box, View} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import React, {useState} from 'react';
 
@@ -40,33 +40,46 @@ const Login = () => {
   }
 
   return (
-    <Container>
-      <Center h="100%">
-        <Center w={'100%'} padding={1} mb={4}>
+    <View bgColor={'#fff'} h="100%">
+      <Container h={'65%'} bgColor="#fff">
+        <Center h="100%" w={'100%'} padding={1} mb={4}>
           <Box mb={3}>
-            <Heading textAlign={'center'} fontWeight={500}>
-              Live Bus Status
+            <Heading
+              textAlign={'center'}
+              color={'primary.500'}
+              fontWeight={600}
+              size={'2xl'}>
+              Baitho!
             </Heading>
-            <Text fontSize={16} textAlign={'center'}>
+            <Heading textAlign={'center'} fontWeight={600} size={'xl'}>
+              Check Live Bus Status
+            </Heading>
+            <Text fontSize={18} textAlign={'center'}>
               Know current location & arrival time of your bus
             </Text>
           </Box>
           <Image source={loginImage} size={'2xl'} h={300} alt="login image" />
         </Center>
-        <Center h="30%">
-          <Heading mb={3} size={'lg'}>
+      </Container>
+      <Center
+        h="35%"
+        bgColor={'primary.500'}
+        borderTopRadius={'80'}
+        borderWidth={2}>
+        <Center>
+          <Heading color={'#fff'} fontWeight={600} mb={3} size={'lg'}>
             Login To Start Tracking!
           </Heading>
           <GoogleSigninButton
             size={GoogleSigninButton.Size.Wide}
-            color={GoogleSigninButton.Color.Dark}
+            color={GoogleSigninButton.Color.Light}
             onPress={onGoogleButtonPress}
             disabled={isLoading}
           />
           {errMsg ? <Text color={'danger.500'}>{errMsg}</Text> : null}
         </Center>
       </Center>
-    </Container>
+    </View>
   );
 };
 

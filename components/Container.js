@@ -3,7 +3,7 @@ import React from 'react';
 
 const Container = ({children, ...rest}) => {
   return (
-    <View h={'100%'} padding={3} {...rest}>
+    <View padding={3} {...rest}>
       {children}
     </View>
   );
