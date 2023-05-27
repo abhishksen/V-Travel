@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import {NativeBaseProvider} from 'native-base';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -9,7 +10,11 @@ import HomeRoutes from './routes/Home.routes';
 import theme from './settings/theme.settings';
 import routeNames from './constants/routeNames';
 
+import {setUser} from './redux/reducers/authReducer';
+import useAuth from './hooks/useAuth';
+
 const Stack = createStackNavigator();
+
 const navTheme = {
   ...DefaultTheme,
   colors: {
@@ -19,18 +24,20 @@ const navTheme = {
 };
 
 const App = () => {
-  const [userData, setuserData] = useState(null);
+  const dispatch = useDispatch();
 
-  function onAuthStateChanged(user) {
-    if (user) {
-      setuserData({name: user.displayName, email: user.email, uid: user.uid});
-    } else {
-      setuserData(null);
-    }
-  }
+  const userData = useAuth();
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    const subscriber = auth().onAuthStateChanged(function (user) {
+      if (user) {
+        dispatch(
+          setUser({name: user.displayName, email: user.email, uid: user.uid}),
+        );
+      } else {
+        dispatch(setUser(null));
+      }
+    });
     return subscriber; // unsubscribe on unmount
   }, []);
 
