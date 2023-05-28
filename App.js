@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {NativeBaseProvider} from 'native-base';
-import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
 
