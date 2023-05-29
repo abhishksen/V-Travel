@@ -6,6 +6,15 @@ const routeNames = {
       BUS_NUM_SEARCH: 'Bus Number Search',
       BUS_ST_SEARCH: 'Bus Station Search',
       BUS_LIST: 'Bus List',
+      BUS_RESULT: {
+        NAME: 'Bus Result',
+        SUB_ROUTES: {
+          LIVE_TRAIN_STATUS: 'Live Train Status',
+          TIME_TABLE: 'Time Table',
+          SEATS: 'Seats',
+          MEDICAL_EMERGENCY: 'Medical Emergency',
+        },
+      },
     },
   },
   LOGIN: {
