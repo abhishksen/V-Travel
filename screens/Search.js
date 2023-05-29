@@ -14,6 +14,7 @@ import {
 } from 'native-base';
 import React from 'react';
 import auth from '@react-native-firebase/auth';
+import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -22,8 +23,6 @@ import colors from '../constants/colors';
 import routeNames from '../constants/routeNames';
 
 import useSearchData from '../hooks/useSearchData';
-
-const arr = [...new Array(6)].map((e, i) => i);
 
 const Search = ({navigation}) => {
   const {data} = useSearchData();
@@ -42,7 +41,8 @@ const Search = ({navigation}) => {
   return (
     <ScrollView backgroundColor={'primary.500'}>
       <StatusBar backgroundColor={colors.primary[500]} />
-      <Container bgColor="primary.500" paddingBottom={8}>
+      {/* Search Form */}
+      <Container bgColor="primary.500" py={8}>
         <Box bgColor="primary.100" padding={5} borderRadius={'xl'}>
           <Stack space={4}>
             <InputButton
@@ -80,11 +80,12 @@ const Search = ({navigation}) => {
             <Button
               onPress={handleSearch}
               startIcon={<Icon as={FontAwesome} name="search" />}>
-              Search
+              Search Buses
             </Button>
           </Stack>
         </Box>
       </Container>
+      {/* Recent Searches */}
       <Container bgColor="white" borderTopRadius={'3xl'}>
         <Heading my={4} fontWeight={500}>
           Recent Searches
@@ -102,30 +103,39 @@ const Search = ({navigation}) => {
 export default Search;
 
 function BusCard({num, title, status}) {
+  const navigation = useNavigation();
   return (
-    <Box
-      borderRadius={'lg'}
-      backgroundColor={'primary.50'}
-      borderColor={'primary.500'}
-      borderWidth={1}
-      padding={2}>
-      <Stack space={1}>
-        <HStack justifyContent={'space-between'} alignItems={'center'}>
-          <HStack space={1} alignItems={'center'}>
-            <Icon as={FontAwesome} name={'bus'} size={'md'} />
-            <Heading size={'md'} bold>
-              {num}
-            </Heading>
+    <Pressable
+      onPress={() =>
+        navigation.navigate(routeNames.HOME.SUB_ROUTES.BUS_RESULT.NAME, {
+          id: num,
+          title,
+        })
+      }>
+      <Box
+        borderRadius={'lg'}
+        backgroundColor={'primary.50'}
+        borderColor={'primary.500'}
+        borderWidth={1}
+        padding={2}>
+        <Stack space={1}>
+          <HStack justifyContent={'space-between'} alignItems={'center'}>
+            <HStack space={1} alignItems={'center'}>
+              <Icon as={FontAwesome} name={'bus'} size={'md'} />
+              <Heading size={'md'} bold>
+                {num}
+              </Heading>
+            </HStack>
+            <Badge
+              borderRadius={'lg'}
+              colorScheme={status === 'running' ? 'success' : 'danger'}>
+              <Text>{status === 'running' ? 'Running' : 'Not Running'}</Text>
+            </Badge>
           </HStack>
-          <Badge
-            borderRadius={'lg'}
-            colorScheme={status === 'running' ? 'success' : 'danger'}>
-            <Text>{status === 'running' ? 'Running' : 'Not Running'}</Text>
-          </Badge>
-        </HStack>
-        <Text fontSize={18}>{title}</Text>
-      </Stack>
-    </Box>
+          <Text fontSize={18}>{title}</Text>
+        </Stack>
+      </Box>
+    </Pressable>
   );
 }
 
