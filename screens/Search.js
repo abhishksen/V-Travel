@@ -40,7 +40,7 @@ const Search = ({navigation}) => {
   };
 
   return (
-    <ScrollView>
+    <ScrollView backgroundColor={'primary.500'}>
       <StatusBar backgroundColor={colors.primary[500]} />
       <Container bgColor="primary.500" paddingBottom={8}>
         <Box bgColor="primary.100" padding={5} borderRadius={'xl'}>
@@ -85,13 +85,13 @@ const Search = ({navigation}) => {
           </Stack>
         </Box>
       </Container>
-      <Container>
+      <Container bgColor="white" borderTopRadius={'3xl'}>
         <Heading my={4} fontWeight={500}>
           Recent Searches
         </Heading>
         <Stack space={6}>
-          {arr.map(e => (
-            <BusCard key={e} />
+          {bus_data.map((e, i) => (
+            <BusCard key={i} num={e.id} title={e.title} status={e.status} />
           ))}
         </Stack>
       </Container>
@@ -101,27 +101,29 @@ const Search = ({navigation}) => {
 
 export default Search;
 
-function BusCard() {
+function BusCard({num, title, status}) {
   return (
     <Box
       borderRadius={'lg'}
       backgroundColor={'primary.50'}
       borderColor={'primary.500'}
       borderWidth={1}
-      padding={5}>
-      <Stack space={5}>
-        <HStack space={5} alignItems={'center'}>
+      padding={2}>
+      <Stack space={1}>
+        <HStack justifyContent={'space-between'} alignItems={'center'}>
           <HStack space={1} alignItems={'center'}>
             <Icon as={FontAwesome} name={'bus'} size={'md'} />
             <Heading size={'md'} bold>
-              300
+              {num}
             </Heading>
           </HStack>
-          <Text fontSize={18}>Silicon Valley</Text>
+          <Badge
+            borderRadius={'lg'}
+            colorScheme={status === 'running' ? 'success' : 'danger'}>
+            <Text>{status === 'running' ? 'Running' : 'Not Running'}</Text>
+          </Badge>
         </HStack>
-        <Badge borderRadius={'lg'} width={'20'} colorScheme="success">
-          <Text>Runnig</Text>
-        </Badge>
+        <Text fontSize={18}>{title}</Text>
       </Stack>
     </Box>
   );
@@ -144,3 +146,15 @@ function InputButton({onPress, Icon, value, placeholder}) {
     </Pressable>
   );
 }
+
+const bus_data = [
+  {id: 400, title: 'Bokaro Steel City', status: 'running'},
+  {id: 302, title: 'Ranchi', status: 'stop'},
+  {id: 512, title: 'Dhanbaad', status: 'running'},
+  {id: 311, title: 'Darbhanga', status: 'running'},
+  {id: 215, title: 'Green City', status: 'running'},
+  {id: 256, title: 'Yellow City', status: 'stop'},
+  {id: 316, title: 'Pink City', status: 'running'},
+  {id: 515, title: 'Blue City', status: 'running'},
+  {id: 412, title: 'Red City', status: 'stop'},
+];

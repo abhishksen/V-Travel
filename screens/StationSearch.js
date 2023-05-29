@@ -4,11 +4,12 @@ import {
   Box,
   Icon,
   HStack,
-  Heading,
+  Text,
+  Divider,
   Pressable,
 } from 'native-base';
 import React, {useState, useEffect} from 'react';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import useSearchData from '../hooks/useSearchData';
 
@@ -56,20 +57,12 @@ const StationSearch = ({route, navigation}) => {
         data={result}
         renderItem={({item}) => (
           <Pressable onPress={handlePress.bind(this, item.title)}>
-            <HStack
-              padding={2}
-              borderColor={'primary.300'}
-              bgColor={'primary.50'}
-              borderRadius={'md'}
-              borderWidth={2}
-              my={2}
-              space={5}
-              alignItems={'center'}>
-              <Icon size={'xl'} as={FontAwesome} name={'bus'} />
-              <Heading flex={1} size="md" fontWeight={400}>
-                {item.title}
-              </Heading>
+            <HStack padding={1} space={5} my={2} alignItems={'center'}>
+              <Icon size={'lg'} as={MaterialCommunityIcons} name={'bus-stop'} />
+
+              <Text flex={1}>{item.title}</Text>
             </HStack>
+            <Divider />
           </Pressable>
         )}
         keyExtractor={(it, i) => i}

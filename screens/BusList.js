@@ -1,4 +1,4 @@
-import {FlatList, Icon, HStack, Heading, Pressable} from 'native-base';
+import {FlatList, Icon, HStack, Divider, Text, Pressable} from 'native-base';
 import React, {useState} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
@@ -33,26 +33,15 @@ function Item({id, title}) {
           title,
         })
       }>
-      <HStack
-        padding={2}
-        borderColor={'primary.300'}
-        bgColor={'primary.50'}
-        borderRadius={'md'}
-        borderWidth={2}
-        my={2}
-        space={5}
-        alignItems={'center'}>
+      <HStack padding={1} my={2} alignItems={'center'}>
         <HStack space={2} flex={0.2} alignItems={'center'}>
-          <Icon size={'xl'} as={FontAwesome} name={'bus'} />
-          <Heading size="md" fontWeight={400}>
-            {id}
-          </Heading>
+          <Icon size={'sm'} as={FontAwesome} name={'bus'} />
+          <Text fontWeight={400}>{id}</Text>
         </HStack>
 
-        <Heading flex={1} size="md" fontWeight={400}>
-          {title}
-        </Heading>
+        <Text flex={1}>{title}</Text>
       </HStack>
+      <Divider />
     </Pressable>
   );
 }

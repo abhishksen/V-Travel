@@ -4,7 +4,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Search from '../screens/Search';
 import BusNumSearch from '../screens/BusNumSearch';
 import BusStationSearch from '../screens/StationSearch';
-import BusList from '../routes/BusResult.routes';
+import BusList from '../screens/BusList';
+import BusResult from '../routes/BusResult.routes';
 
 import routeNames from '../constants/routeNames';
 import colors from '../constants/colors';
@@ -46,11 +47,18 @@ const App = () => {
         component={BusStationSearch}
       />
       <Stack.Screen
+        options={{
+          title: 'Availale Buses',
+        }}
+        name={routeNames.HOME.SUB_ROUTES.BUS_LIST}
+        component={BusList}
+      />
+      <Stack.Screen
         options={({route, navigation}) => ({
           title: route.params.id + ' - ' + route.params.title,
         })}
         name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.NAME}
-        component={BusList}
+        component={BusResult}
       />
     </Stack.Navigator>
   );
