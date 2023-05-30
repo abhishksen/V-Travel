@@ -143,7 +143,7 @@ function InputButton({onPress, Icon, value, placeholder}) {
   return (
     <Pressable onPress={onPress}>
       <Box w="100%" bgColor={'primary.50'} padding={3} borderRadius={'md'}>
-        <HStack space={2}>
+        <HStack alignItems={'center'} space={2}>
           {Icon}
           <Heading
             size={'sm'}
