@@ -47,7 +47,7 @@ function Item({id, title}) {
 }
 
 const bus_data = [
-  {id: 400, title: 'Bokaro Steel City'},
+  {id: 400, title: 'Bokaro Steel City 1'},
   {id: 302, title: 'Ranchi'},
   {id: 512, title: 'Dhanbaad'},
   {id: 311, title: 'Darbhanga'},
