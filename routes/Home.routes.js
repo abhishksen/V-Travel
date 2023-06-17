@@ -9,10 +9,13 @@ import BusResult from '../routes/BusResult.routes';
 
 import routeNames from '../constants/routeNames';
 import colors from '../constants/colors';
+import useFetchBuses from '../hooks/useFetchBuses';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  useFetchBuses();
+
   return (
     <Stack.Navigator
       screenOptions={{

@@ -15,14 +15,21 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Container from '../components/Container';
 
 import routeNames from '../constants/routeNames';
+import useBuses from '../hooks/useBuses';
 
 const BusNumSearch = () => {
   const [busNum, setbusNum] = useState('');
   const [result, setresult] = useState([]);
 
+  const {data: bus_data} = useBuses();
+
   useEffect(() => {
     setresult(
-      bus_data.filter(obj => obj.id.toString().includes(busNum.toString())),
+      bus_data.filter(
+        obj =>
+          obj.bus_number.toString().includes(busNum.toString()) ||
+          obj.title.toString().includes(busNum.toString()),
+      ),
     );
   }, [busNum]);
 
@@ -41,8 +48,10 @@ const BusNumSearch = () => {
       </Box>
       <FlatList
         data={result}
-        renderItem={({item}) => <Item title={item.title} id={item.id} />}
-        keyExtractor={item => item.id}
+        renderItem={({item}) => (
+          <Item title={item.title} id={item.bus_number} />
+        )}
+        keyExtractor={item => item.bus_number}
       />
     </Container>
   );
@@ -73,15 +82,3 @@ function Item({id, title}) {
     </Pressable>
   );
 }
-
-const bus_data = [
-  {id: 400, title: 'Bokaro Steel City'},
-  {id: 302, title: 'Ranchi'},
-  {id: 512, title: 'Dhanbaad'},
-  {id: 311, title: 'Darbhanga'},
-  {id: 215, title: 'Green City'},
-  {id: 256, title: 'Yellow City'},
-  {id: 316, title: 'Pink City'},
-  {id: 515, title: 'Blue City'},
-  {id: 412, title: 'Red City'},
-];

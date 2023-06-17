@@ -12,7 +12,8 @@ import colors from '../constants/colors';
 
 const Tab = createMaterialTopTabNavigator();
 
-function BusResultRoutes() {
+function BusResultRoutes({route}) {
+  console.log(route.params);
   return (
     <Tab.Navigator
       screenOptions={{
