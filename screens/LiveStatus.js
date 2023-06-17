@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   Text,
   HStack,
@@ -8,91 +8,123 @@ import {
   Center,
   Box,
   IconButton,
+  Spinner,
 } from 'native-base';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Container from '../components/Container';
 
-const LiveStatus = () => {
-  const [shippingData, setShippingData] = useState([
-    {id: 1, title: 'Red City', status: 'completed'},
-    {id: 2, title: 'Green City', status: 'active', type: 'reaching'},
-    {id: 3, title: 'Yellow City', status: 'inactive'},
-    {id: 4, title: 'blue city', status: 'active'},
-    {
-      id: 5,
-      title: 'Pink City',
-      status: 'inactive',
-    },
-  ]);
+import useLiveStatus from '../hooks/useLiveStatus';
+
+const LiveStatus = ({route}) => {
+  const bus_number = route.params.bus_number;
+
+  const {isLoading, data, is_running} = useLiveStatus(bus_number);
 
   return (
     <Container>
-      <VStack space={3}>
-        {shippingData.map((stage, i, arr) => {
-          if (stage.type === 'reaching') {
-            return (
-              <Center key={i} w="100%">
-                <Divider
-                  thickness={3}
-                  bgColor={'primary.500'}
-                  orientation="vertical"
-                  mx="3"
-                  h={20}
-                />
-                <HStack
-                  position={'absolute'}
-                  zIndex={6}
-                  alignItems={'center'}
-                  padding={3}
-                  space={3}
-                  borderRadius={'md'}
-                  bgColor={'#fff'}>
-                  <IconButton
-                    borderRadius={'full'}
-                    size={'sm'}
-                    variant="solid"
-                    _icon={{
-                      as: FontAwesome,
-                      name: 'bus',
-                    }}
+      {isLoading ? (
+        <Center w="100%">
+          <Spinner />
+        </Center>
+      ) : null}
+      {is_running ? (
+        <VStack space={3}>
+          {data.map((stage, i, arr) => {
+            if (stage.status === 'reaching' || stage.status === 'final') {
+              return (
+                <Center key={i} w="100%">
+                  <Divider
+                    thickness={3}
+                    bgColor={'primary.500'}
+                    orientation="vertical"
+                    h={5}
                   />
 
-                  <Box>
-                    <Text>Reaching Next Stop</Text>
-                    <Text>
-                      Est. Time: <Text bold>3min</Text>
-                    </Text>
-                  </Box>
-                </HStack>
-                <IconButton
-                  mt={10}
-                  borderRadius={'full'}
-                  size={'sm'}
-                  variant="solid"
-                  _icon={{
-                    as: FontAwesome,
-                    name: 'arrow-down',
-                  }}
-                />
-              </Center>
+                  <HStack
+                    alignItems={'center'}
+                    padding={3}
+                    space={3}
+                    borderRadius={'md'}
+                    bgColor={'#fff'}>
+                    <IconButton
+                      borderRadius={'full'}
+                      size={'sm'}
+                      variant="solid"
+                      _icon={{
+                        as: FontAwesome,
+                        name: 'bus',
+                      }}
+                    />
+
+                    <Box>
+                      <Text>
+                        {stage.status === 'final'
+                          ? 'Bus has reached the destination'
+                          : 'Reaching Next Stop'}
+                      </Text>
+                      {stage.status === 'final' ? null : (
+                        <Text>
+                          <Text bold>{stage.distance} meters away </Text>
+                        </Text>
+                      )}
+                    </Box>
+                  </HStack>
+
+                  <Divider
+                    thickness={3}
+                    bgColor={'primary.500'}
+                    orientation="vertical"
+                    h={5}
+                  />
+
+                  {stage.status === 'final' ? null : (
+                    <IconButton
+                      borderRadius={'full'}
+                      size={'sm'}
+                      variant="solid"
+                      _icon={{
+                        as: FontAwesome,
+                        name: 'arrow-down',
+                      }}
+                    />
+                  )}
+                </Center>
+              );
+            }
+
+            return (
+              <HStack bgColor={'#fff'} padding={2} key={i}>
+                <Heading
+                  textTransform={'capitalize'}
+                  w={'100%'}
+                  textAlign={'center'}
+                  size={'sm'}>
+                  {stage.title}
+                </Heading>
+              </HStack>
             );
-          }
-
-          return (
-            <HStack bgColor={'#fff'} padding={2} key={i}>
-              <Text flex={0.2}>19:00</Text>
-              <Heading size={'sm'} flex={0.7}>
-                {stage.title}
-              </Heading>
-
-              <Text color={'green.500'} flex={0.1}>
-                19:00
-              </Text>
+          })}
+        </VStack>
+      ) : (
+        <Center w="100%" h="80%">
+          <Box bgColor={'#fff'} padding={5}>
+            <HStack space={3}>
+              <IconButton
+                borderRadius={'full'}
+                size={'sm'}
+                bgColor={'red.400'}
+                variant="solid"
+                _icon={{
+                  as: FontAwesome,
+                  name: 'bus',
+                }}
+              />
+              <Heading>Bus is not running</Heading>
             </HStack>
-          );
-        })}
-      </VStack>
+          </Box>
+        </Center>
+      )}
     </Container>
   );
 };

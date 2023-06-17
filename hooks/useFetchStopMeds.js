@@ -6,7 +6,7 @@ import schedules_schema from '../schemas/schedules.schema';
 /**
  * @returns {{isLoading: Boolean, stops: Array}}
  */
-const useFetchStops = (bus_number = 0) => {
+const useFetchStopMeds = (bus_number = 0) => {
   const [isLoading, setLoading] = useState(false);
   const [stops, setstops] = useState([]);
 
@@ -34,6 +34,7 @@ const useFetchStops = (bus_number = 0) => {
                   latitude: stop_data.coords.latitude,
                   longitude: stop_data.coords.longitude,
                 },
+                hospitals: [...stop_data.hospitals],
               },
             });
           }
@@ -43,7 +44,7 @@ const useFetchStops = (bus_number = 0) => {
           setLoading(false);
         }
       })
-      .catch(e => {
+      .catch(() => {
         setLoading(false);
       });
   }, []);
@@ -54,4 +55,4 @@ const useFetchStops = (bus_number = 0) => {
   };
 };
 
-export default useFetchStops;
+export default useFetchStopMeds;

@@ -13,7 +13,7 @@ import colors from '../constants/colors';
 const Tab = createMaterialTopTabNavigator();
 
 function BusResultRoutes({route}) {
-  console.log(route.params);
+  const id = route.params.id;
   return (
     <Tab.Navigator
       screenOptions={{
@@ -26,24 +26,26 @@ function BusResultRoutes({route}) {
         },
       }}>
       <Tab.Screen
-        name={
-          routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.LIVE_TRAIN_STATUS
-        }
+        name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.LIVE_BUS_STATUS}
         component={LiveStatus}
+        initialParams={{bus_number: id}}
       />
       <Tab.Screen
         name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.TIME_TABLE}
         component={TimeTable}
+        initialParams={{bus_number: id}}
       />
       <Tab.Screen
         name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.SEATS}
         component={Seats}
+        initialParams={{bus_number: id}}
       />
       <Tab.Screen
         name={
           routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.MEDICAL_EMERGENCY
         }
         component={MedicalEmergency}
+        initialParams={{bus_number: id}}
       />
     </Tab.Navigator>
   );

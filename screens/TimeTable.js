@@ -1,15 +1,20 @@
-import {View, Text, Center, HStack, Heading, VStack, Badge} from 'native-base';
+import {View, Heading, VStack, Badge, Center, Spinner} from 'native-base';
 import React from 'react';
 import Timeline from 'react-native-timeline-flatlist';
 
 import Container from '../components/Container';
 import colors from '../constants/colors';
+import useFetchStops from '../hooks/useFetchStops';
 
-const TimeTable = () => {
+const TimeTable = ({route}) => {
+  const bus_number = route.params.bus_number;
+  const {isLoading, stops} = useFetchStops(bus_number);
+
   return (
     <Container h="100%">
+      <Center w="100%">{isLoading ? <Spinner /> : null}</Center>
       <Timeline
-        data={data}
+        data={stops}
         eventContainerStyle={{
           minHeight: 100,
           marginTop: -13,
@@ -28,11 +33,15 @@ export default TimeTable;
 function renderDetail(rowData) {
   return (
     <View>
-      <Heading size={'md'} color={'black'} fontWeight={400}>
-        {rowData.title}
+      <Heading
+        textTransform={'capitalize'}
+        size={'md'}
+        color={'black'}
+        fontWeight={400}>
+        {rowData.stop.title}
       </Heading>
       <VStack my={3} space={1}>
-        {rowData.times.map((t, i) => (
+        {rowData.timings.map((t, i) => (
           <Badge
             borderRadius={'full'}
             bgColor={'#ff9797'}
@@ -49,12 +58,3 @@ function renderDetail(rowData) {
     </View>
   );
 }
-
-const data = [
-  {title: 'Red City', times: ['09:00', '13:00', '18:00', '22:00']},
-  {title: 'Red City', times: ['09:00', '13:00', '18:00', '22:00']},
-  {title: 'Red City', times: ['09:00', '13:00', '18:00', '22:00']},
-  {title: 'Red City', times: ['09:00', '13:00', '18:00', '22:00']},
-  {title: 'Red City', times: ['09:00', '13:00', '18:00', '22:00']},
-  {title: 'Red City', times: ['09:00', '13:00', '18:00', '22:00']},
-];

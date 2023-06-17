@@ -7,6 +7,8 @@ import {
   Box,
   Icon,
   VStack,
+  Center,
+  Spinner,
 } from 'native-base';
 import {Linking} from 'react-native';
 import React from 'react';
@@ -16,12 +18,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Container from '../components/Container';
 
 import colors from '../constants/colors';
+import useFetchStopMeds from '../hooks/useFetchStopMeds';
 
-const MedicalEmergency = () => {
+const MedicalEmergency = ({route}) => {
+  const bus_number = route.params.bus_number;
+  const {isLoading, stops} = useFetchStopMeds(bus_number);
   return (
     <Container h="100%">
+      <Center w="100%">{isLoading ? <Spinner /> : null}</Center>
       <Timeline
-        data={data}
+        data={stops}
         titleStyle={{
           color: 'black',
         }}
@@ -44,11 +50,11 @@ export default MedicalEmergency;
 function renderDetail(rowData) {
   return (
     <View>
-      <Heading size={'md'} fontWeight={400}>
-        {rowData.title}
+      <Heading textTransform={'capitalize'} size={'md'} fontWeight={400}>
+        {rowData.stop.title}
       </Heading>
       <VStack my={5} space={3}>
-        {rowData.hospitals.map((e, i) => (
+        {rowData.stop.hospitals.map((e, i) => (
           <Box
             key={i}
             borderRadius={'lg'}
