@@ -12,8 +12,7 @@ import {
   Icon,
   Pressable,
 } from 'native-base';
-import React from 'react';
-import auth from '@react-native-firebase/auth';
+import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -23,20 +22,45 @@ import colors from '../constants/colors';
 import routeNames from '../constants/routeNames';
 
 import useSearchData from '../hooks/useSearchData';
+import useOnlyStopsFetch from '../hooks/useOnlyStopsFetch';
+import useSearchBuses from '../hooks/useSearchBuses';
 
 const Search = ({navigation}) => {
-  const {data} = useSearchData();
+  const {data, setSearchResults} = useSearchData();
+  const {data: buses_with_stops_data} = useSearchBuses();
+  const [isSearchLoading, setisSearchLoading] = useState(false);
 
   const handleSearch = () => {
-    // auth().signOut()
-
     if (!data.source || !data.dest) {
       alert('We need both source and destination to show you the results!');
       return;
     }
 
+    setisSearchLoading(true);
+
+    const result = buses_with_stops_data.filter(bus => {
+      const source_idx = bus.stops.findIndex(
+        v => v.title.toLowerCase() === data.source.toLowerCase(),
+      );
+      const dest_idx = bus.stops.findIndex(
+        v => v.title.toLowerCase() === data.dest.toLowerCase(),
+      );
+
+      if (source_idx > -1 && dest_idx > -1) {
+        return true;
+      }
+
+      return false;
+    });
+
+    setSearchResults(result);
+
+    setisSearchLoading(false);
+
     navigation.navigate(routeNames.HOME.SUB_ROUTES.BUS_LIST);
   };
+
+  useOnlyStopsFetch();
 
   return (
     <ScrollView backgroundColor={'primary.500'}>
@@ -78,6 +102,7 @@ const Search = ({navigation}) => {
               value={data.dest}
             />
             <Button
+              isLoading={isSearchLoading}
               onPress={handleSearch}
               startIcon={<Icon as={FontAwesome} name="search" />}>
               Search Buses

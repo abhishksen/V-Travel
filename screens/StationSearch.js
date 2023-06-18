@@ -7,11 +7,14 @@ import {
   Text,
   Divider,
   Pressable,
+  Spinner,
+  Center,
 } from 'native-base';
 import React, {useState, useEffect} from 'react';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import useSearchData from '../hooks/useSearchData';
+import useOnlyStops from '../hooks/useOnlyStops';
 
 import Container from '../components/Container';
 
@@ -19,6 +22,7 @@ const StationSearch = ({route, navigation}) => {
   const type = route.params?.type;
 
   const {setDest, setSource} = useSearchData();
+  const {isLoading, stops} = useOnlyStops();
 
   const [stText, setstText] = useState('');
   const [result, setresult] = useState([]);
@@ -35,7 +39,7 @@ const StationSearch = ({route, navigation}) => {
 
   useEffect(() => {
     setresult(
-      bus_data.filter(obj =>
+      stops.filter(obj =>
         obj.title.toLowerCase().includes(stText.toLowerCase()),
       ),
     );
@@ -43,6 +47,11 @@ const StationSearch = ({route, navigation}) => {
 
   return (
     <Container>
+      {isLoading ? (
+        <Center w="100%">
+          <Spinner />
+        </Center>
+      ) : null}
       <Box mb={4}>
         <Input
           size={'lg'}
@@ -60,7 +69,9 @@ const StationSearch = ({route, navigation}) => {
             <HStack padding={1} space={5} my={2} alignItems={'center'}>
               <Icon size={'lg'} as={MaterialCommunityIcons} name={'bus-stop'} />
 
-              <Text flex={1}>{item.title}</Text>
+              <Text textTransform={'capitalize'} flex={1}>
+                {item.title}
+              </Text>
             </HStack>
             <Divider />
           </Pressable>

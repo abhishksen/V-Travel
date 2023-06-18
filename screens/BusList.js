@@ -1,21 +1,33 @@
 import {FlatList, Icon, HStack, Divider, Text, Pressable} from 'native-base';
-import React, {useState} from 'react';
+import React, {useEffect} from 'react';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 
 import Container from '../components/Container';
 
 import routeNames from '../constants/routeNames';
+import useSearchData from '../hooks/useSearchData';
 
 const BusList = () => {
-  const [result, setresult] = useState(bus_data);
+  const {data, setreset} = useSearchData();
+
+  useEffect(() => {
+    return () => {
+      setreset();
+    };
+  }, []);
 
   return (
     <Container>
       <FlatList
-        data={result}
-        renderItem={({item}) => <Item title={item.title} id={item.id} />}
-        keyExtractor={item => item.id}
+        data={data.results}
+        renderItem={({item}) => (
+          <Item
+            title={`${item.stops[0].title} - ${data.dest}`}
+            id={item.bus_number}
+          />
+        )}
+        keyExtractor={item => item.bus_number}
       />
     </Container>
   );
