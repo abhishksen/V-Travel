@@ -10,6 +10,7 @@ const routeNames = {
         NAME: 'Bus Result',
         SUB_ROUTES: {
           LIVE_BUS_STATUS: 'Live Bus Status',
+          MAP_VIEW: 'MAP_VIEW',
           TIME_TABLE: 'Time Table',
           SEATS: 'Seats',
           MEDICAL_EMERGENCY: 'Medical Emergency',

@@ -6,6 +6,7 @@ import LiveStatus from '../screens/LiveStatus';
 import TimeTable from '../screens/TimeTable';
 import Seats from '../screens/Seats';
 import MedicalEmergency from '../screens/MedicalEmergency';
+import MapView from '../screens/MapView';
 
 import routeNames from '../constants/routeNames';
 import colors from '../constants/colors';
@@ -28,6 +29,12 @@ function BusResultRoutes({route}) {
       <Tab.Screen
         name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.LIVE_BUS_STATUS}
         component={LiveStatus}
+        initialParams={{bus_number: id}}
+      />
+      <Tab.Screen
+        name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.MAP_VIEW}
+        component={MapView}
+        options={{title: 'Map View'}}
         initialParams={{bus_number: id}}
       />
       <Tab.Screen
