@@ -13,6 +13,7 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import Container from '../components/Container';
+import RenderWhen from '../components/RenderWhen';
 
 import useLiveStatus from '../hooks/useLiveStatus';
 
@@ -23,15 +24,16 @@ const LiveStatus = ({route}) => {
 
   return (
     <Container>
-      {isLoading ? (
+      <RenderWhen isTrue={isLoading}>
         <Center w="100%">
           <Spinner />
         </Center>
-      ) : null}
+      </RenderWhen>
+
       {is_running ? (
-        <VStack space={3}>
+        <VStack space={7}>
           {data.map((stage, i, arr) => {
-            if (stage.status === 'reaching' || stage.status === 'final') {
+            if (stage.status === 'reaching') {
               return (
                 <Center key={i} w="100%">
                   <Divider
@@ -58,16 +60,11 @@ const LiveStatus = ({route}) => {
                     />
 
                     <Box>
+                      <Text>Reaching Next Stop</Text>
                       <Text>
-                        {stage.status === 'final'
-                          ? 'Bus has reached the destination'
-                          : 'Reaching Next Stop'}
+                        <Text bold>{stage.distance_km} km away </Text>
                       </Text>
-                      {stage.status === 'final' ? null : (
-                        <Text>
-                          <Text bold>{stage.distance} meters away </Text>
-                        </Text>
-                      )}
+                      <Text bold>Est. Time: {stage.time_min} min </Text>
                     </Box>
                   </HStack>
 
@@ -78,31 +75,54 @@ const LiveStatus = ({route}) => {
                     h={5}
                   />
 
-                  {stage.status === 'final' ? null : (
-                    <IconButton
-                      borderRadius={'full'}
-                      size={'sm'}
-                      variant="solid"
-                      _icon={{
-                        as: FontAwesome,
-                        name: 'arrow-down',
-                      }}
-                    />
-                  )}
+                  <IconButton
+                    borderRadius={'full'}
+                    size={'sm'}
+                    variant="solid"
+                    _icon={{
+                      as: FontAwesome,
+                      name: 'arrow-down',
+                    }}
+                  />
                 </Center>
               );
             }
 
             return (
-              <HStack bgColor={'#fff'} padding={2} key={i}>
-                <Heading
-                  textTransform={'capitalize'}
-                  w={'100%'}
-                  textAlign={'center'}
-                  size={'sm'}>
-                  {stage.title}
-                </Heading>
-              </HStack>
+              <Box bgColor={'#fff'} padding={1} key={i}>
+                <HStack my={3}>
+                  <Heading
+                    textTransform={'capitalize'}
+                    w={'100%'}
+                    textAlign={'center'}
+                    size={'sm'}
+                    fontWeight={500}>
+                    {stage.title}
+                  </Heading>
+                </HStack>
+                <RenderWhen isTrue={stage.is_halted}>
+                  <HStack
+                    bgColor={'primary.500'}
+                    justifyContent={'center'}
+                    space={2}
+                    alignItems={'center'}
+                    w="100%">
+                    <IconButton
+                      borderRadius={'full'}
+                      size={'sm'}
+                      padding={1}
+                      variant="solid"
+                      _icon={{
+                        as: FontAwesome,
+                        name: 'bus',
+                      }}
+                    />
+                    <Heading color={'white'} size={'sm'} fontWeight={400}>
+                      Bus is waiting here
+                    </Heading>
+                  </HStack>
+                </RenderWhen>
+              </Box>
             );
           })}
         </VStack>

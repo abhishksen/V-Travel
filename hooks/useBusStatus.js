@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import bus_status_schema from '../schemas/bus_status.schema';
 
 /**
- * @returns {{is_running: Boolean, current_location: Object, bus_number: Number,reached_stop_index:Number, is_reverse:Boolean}}
+ * @returns {{is_running: Boolean, current_location: Object, bus_number: Number,reached_stop_index:Number, is_reverse:Boolean, is_halted_at_stop:Boolean, time_min:String, distance_km:String}}
  */
 const useBusStatus = (bus_number = 0) => {
   const [busStatus, setbusStatus] = useState({
