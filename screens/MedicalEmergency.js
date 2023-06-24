@@ -68,7 +68,7 @@ function renderDetail(rowData) {
             <Pressable onPress={() => Linking.openURL(`tel:${e.phone}`)}>
               <Badge
                 borderRadius={'md'}
-                bgColor={'primary.500'}
+                bgColor={'secondary.500'}
                 leftIcon={
                   <Icon as={MaterialIcons} name="call" color={'white'} />
                 }

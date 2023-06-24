@@ -25,6 +25,10 @@ function BusResultRoutes({route}) {
           fontFamily: 'RedHatDisplay-SemiBold',
           fontSize: 16,
         },
+
+        tabBarIndicatorStyle: {
+          backgroundColor: colors.secondary[500],
+        },
       }}>
       <Tab.Screen
         name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.SUB_ROUTES.LIVE_BUS_STATUS}

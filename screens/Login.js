@@ -1,9 +1,10 @@
-import {Text, Image, Center, Heading, Box, View} from 'native-base';
+import {Text, Image, Center, Heading, Box, View, HStack} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import React, {useState} from 'react';
 
 import Container from '../components/Container';
 import loginImage from '../assets/images/login.png';
+import logo from '../assets/images/vlogo.jpg';
 
 import {
   GoogleSignin,
@@ -43,14 +44,20 @@ const Login = () => {
     <View bgColor={'#fff'} h="100%">
       <Container h={'65%'} bgColor="#fff">
         <Center h="100%" w={'100%'} padding={1} mb={4}>
+          <Image source={logo} size={'sm'} mb={1} alt="logo" />
           <Box mb={3}>
-            <Heading
-              textAlign={'center'}
-              color={'primary.500'}
-              fontWeight={600}
-              size={'2xl'}>
-              Baitho!
-            </Heading>
+            <HStack
+              justifyContent={'center'}
+              alignItems={'center'}
+              space={2}
+              w="100%">
+              <Heading color={'secondary.500'} fontWeight={600} size={'2xl'}>
+                Vedanta
+              </Heading>
+              <Heading color={'primary.500'} fontWeight={600} size={'2xl'}>
+                Baitho!
+              </Heading>
+            </HStack>
             <Heading textAlign={'center'} fontWeight={600} size={'xl'}>
               Check Live Bus Status
             </Heading>

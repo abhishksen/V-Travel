@@ -44,7 +44,7 @@ function renderDetail(rowData) {
         {rowData.timings.map((t, i) => (
           <Badge
             borderRadius={'full'}
-            bgColor={'#ff9797'}
+            bgColor={'secondary.200'}
             padding={1}
             w="40%"
             _text={{

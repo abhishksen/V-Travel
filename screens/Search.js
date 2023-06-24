@@ -103,6 +103,7 @@ const Search = ({navigation}) => {
             />
             <Button
               isLoading={isSearchLoading}
+              colorScheme={'secondary'}
               onPress={handleSearch}
               startIcon={<Icon as={FontAwesome} name="search" />}>
               Search Buses
@@ -139,8 +140,8 @@ function BusCard({num, title, status}) {
       }>
       <Box
         borderRadius={'lg'}
-        backgroundColor={'primary.50'}
-        borderColor={'primary.500'}
+        backgroundColor={'secondary.50'}
+        borderColor={'secondary.500'}
         borderWidth={1}
         padding={2}>
         <Stack space={1}>

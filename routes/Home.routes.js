@@ -1,5 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
+import {HStack, Image} from 'native-base';
 
 import Search from '../screens/Search';
 import BusNumSearch from '../screens/BusNumSearch';
@@ -10,6 +11,8 @@ import BusResult from '../routes/BusResult.routes';
 import routeNames from '../constants/routeNames';
 import colors from '../constants/colors';
 import useFetchBuses from '../hooks/useFetchBuses';
+
+import logo from '../assets/images/vlogo.jpg';
 
 const Stack = createStackNavigator();
 
@@ -30,7 +33,17 @@ const App = () => {
       }}>
       <Stack.Screen
         options={{
-          title: 'Track Bus',
+          title: 'Search Bus',
+          headerLeft: () => (
+            <HStack marginLeft={4}>
+              <Image
+                borderRadius={'full'}
+                source={logo}
+                size={'xs'}
+                alt="logo"
+              />
+            </HStack>
+          ),
         }}
         name={routeNames.HOME.SUB_ROUTES.SEARCH}
         component={Search}
