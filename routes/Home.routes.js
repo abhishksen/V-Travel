@@ -1,6 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HStack, Image} from 'native-base';
+import {HStack, IconButton, Image, Menu} from 'native-base';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import auth from '@react-native-firebase/auth';
 
 import Search from '../screens/Search';
 import BusNumSearch from '../screens/BusNumSearch';
@@ -33,17 +35,31 @@ const App = () => {
       }}>
       <Stack.Screen
         options={{
-          title: 'Search Bus',
-          headerLeft: () => (
-            <HStack marginLeft={4}>
-              <Image
-                borderRadius={'full'}
-                source={logo}
-                size={'xs'}
-                alt="logo"
-              />
-            </HStack>
-          ),
+          title: 'Vedanta Baitho',
+
+          headerRight: () => {
+            return (
+              <Menu
+                w="190"
+                mr={4}
+                trigger={triggerProps => {
+                  return (
+                    <IconButton
+                      {...triggerProps}
+                      size={'md'}
+                      variant="solid"
+                      mr={4}
+                      _icon={{
+                        as: MaterialCommunityIcons,
+                        name: 'face-man-profile',
+                      }}
+                    />
+                  );
+                }}>
+                <Menu.Item onPress={() => auth().signOut()}>Logout</Menu.Item>
+              </Menu>
+            );
+          },
         }}
         name={routeNames.HOME.SUB_ROUTES.SEARCH}
         component={Search}

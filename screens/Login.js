@@ -46,19 +46,19 @@ const Login = () => {
         <Center h="100%" w={'100%'} padding={1} mb={4}>
           <Image source={logo} size={'sm'} mb={1} alt="logo" />
           <Box mb={3}>
-            <HStack
-              justifyContent={'center'}
-              alignItems={'center'}
-              space={2}
-              w="100%">
-              <Heading color={'secondary.500'} fontWeight={600} size={'2xl'}>
+            <Center flexDirection={'row'}>
+              <Heading
+                color={'secondary.500'}
+                mr={1}
+                fontWeight={600}
+                size={'xl'}>
                 Vedanta
               </Heading>
-              <Heading color={'primary.500'} fontWeight={600} size={'2xl'}>
+              <Heading color={'primary.500'} fontWeight={600} size={'xl'}>
                 Baitho!
               </Heading>
-            </HStack>
-            <Heading textAlign={'center'} fontWeight={600} size={'xl'}>
+            </Center>
+            <Heading textAlign={'center'} fontWeight={600} size={'md'}>
               Check Live Bus Status
             </Heading>
             <Text fontSize={18} textAlign={'center'}>

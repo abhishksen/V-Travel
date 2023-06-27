@@ -8,14 +8,19 @@ import {
   StatusBar,
   Heading,
   Badge,
-  ScrollView,
+  View,
   Icon,
   Pressable,
+  IconButton,
+  VStack,
+  Center,
+  Image,
 } from 'native-base';
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Container from '../components/Container';
 import colors from '../constants/colors';
@@ -24,6 +29,8 @@ import routeNames from '../constants/routeNames';
 import useSearchData from '../hooks/useSearchData';
 import useOnlyStopsFetch from '../hooks/useOnlyStopsFetch';
 import useSearchBuses from '../hooks/useSearchBuses';
+
+import fullvlogo from '../assets/images/vlogo_full.jpg';
 
 const Search = ({navigation}) => {
   const {data, setSearchResults} = useSearchData();
@@ -63,66 +70,119 @@ const Search = ({navigation}) => {
   useOnlyStopsFetch();
 
   return (
-    <ScrollView backgroundColor={'primary.500'}>
+    <View h="100%" backgroundColor={'primary.500'}>
       <StatusBar backgroundColor={colors.primary[500]} />
-      {/* Search Form */}
-      <Container bgColor="primary.500" py={8}>
-        <Box bgColor="primary.100" padding={5} borderRadius={'xl'}>
-          <Stack space={4}>
-            <InputButton
-              Icon={<Icon as={FontAwesome} name={'bus'} />}
-              placeholder={'Bus Number'}
-              onPress={() =>
-                navigation.navigate(routeNames.HOME.SUB_ROUTES.BUS_NUM_SEARCH)
-              }
-            />
-            <HStack space={2} alignItems={'center'}>
-              <Divider flex={1} bgColor={'primary.500'} />
-              <Text>OR</Text>
-              <Divider flex={1} bgColor={'primary.500'} />
-            </HStack>
-            <InputButton
-              Icon={<Icon as={FontAwesome} name={'circle-o'} />}
-              placeholder={'From Bus Station'}
-              value={data.source}
-              onPress={() =>
-                navigation.navigate(routeNames.HOME.SUB_ROUTES.BUS_ST_SEARCH, {
-                  type: 'source',
-                })
-              }
-            />
-            <InputButton
-              Icon={<Icon as={MaterialIcons} name={'location-pin'} />}
-              placeholder={'To Bus Station'}
-              onPress={() =>
-                navigation.navigate(routeNames.HOME.SUB_ROUTES.BUS_ST_SEARCH, {
-                  type: 'dest',
-                })
-              }
-              value={data.dest}
-            />
-            <Button
-              isLoading={isSearchLoading}
-              colorScheme={'secondary'}
-              onPress={handleSearch}
-              startIcon={<Icon as={FontAwesome} name="search" />}>
-              Search Buses
-            </Button>
-          </Stack>
+
+      {/* Logo */}
+      <Box h="10%" px={4} bgColor={'primary.500'}>
+        <Box w="100%" h={'100%'} borderRadius={'2xl'} bgColor={'#fff'}>
+          <Image
+            source={fullvlogo}
+            size={'full'}
+            borderRadius={'2xl'}
+            alt="logo"
+          />
         </Box>
+      </Box>
+
+      {/* Search Form */}
+      <Container h={'50%'} bgColor="primary.500" py={8}>
+        <Center h="100%" w="100%">
+          <Box
+            w="100%"
+            h="100%"
+            bgColor="primary.100"
+            padding={5}
+            borderRadius={'xl'}>
+            <Center h="100%">
+              <Stack w="100%" space={4}>
+                <InputButton
+                  Icon={<Icon as={FontAwesome} name={'bus'} />}
+                  placeholder={'Bus Number'}
+                  onPress={() =>
+                    navigation.navigate(
+                      routeNames.HOME.SUB_ROUTES.BUS_NUM_SEARCH,
+                    )
+                  }
+                />
+                <HStack space={2} alignItems={'center'}>
+                  <Divider flex={1} bgColor={'primary.500'} />
+                  <Text>OR</Text>
+                  <Divider flex={1} bgColor={'primary.500'} />
+                </HStack>
+                <InputButton
+                  Icon={<Icon as={FontAwesome} name={'circle-o'} />}
+                  placeholder={'From Bus Station'}
+                  value={data.source}
+                  onPress={() =>
+                    navigation.navigate(
+                      routeNames.HOME.SUB_ROUTES.BUS_ST_SEARCH,
+                      {
+                        type: 'source',
+                      },
+                    )
+                  }
+                />
+                <InputButton
+                  Icon={<Icon as={MaterialIcons} name={'location-pin'} />}
+                  placeholder={'To Bus Station'}
+                  onPress={() =>
+                    navigation.navigate(
+                      routeNames.HOME.SUB_ROUTES.BUS_ST_SEARCH,
+                      {
+                        type: 'dest',
+                      },
+                    )
+                  }
+                  value={data.dest}
+                />
+                <Button
+                  isLoading={isSearchLoading}
+                  colorScheme={'secondary'}
+                  onPress={handleSearch}
+                  startIcon={<Icon as={FontAwesome} name="search" />}>
+                  Search Buses
+                </Button>
+              </Stack>
+            </Center>
+          </Box>
+        </Center>
       </Container>
+
       {/* Recent Searches */}
-      <Container bgColor="white" borderTopRadius={'3xl'}>
-        <Heading my={4} fontWeight={500}>
-          Recent Searches
-        </Heading>
-        <Stack space={6}>
+      <Container h="40%" bgColor="white" borderTopRadius={'3xl'}>
+        {/* <Stack space={6}>
           {bus_data.map((e, i) => (
             <BusCard key={i} num={e.id} title={e.title} status={e.status} />
           ))}
-        </Stack>
+        </Stack> */}
+
+        <Center h="100%">
+          <VStack padding={2} space={5} w="100%">
+            {/* <Box w="100%">
+              <Heading fontWeight={500}>Important Links</Heading>
+            </Box> */}
+            <HStack justifyContent={'space-around'} w="100%">
+              <MenuIconButton
+                title={'Blogs'}
+                as={Ionicons}
+                iconName={'newspaper'}
+              />
+              <MenuIconButton
+                title={'Contact Us'}
+                iconName={'perm-contact-cal'}
+              />
+              <MenuIconButton title={'Support'} iconName={'support-agent'} />
+            </HStack>
+            <HStack justifyContent={'space-around'} w="100%">
+              <MenuIconButton title={'About Us'} iconName={'info'} />
+              <MenuIconButton title={'Feedback'} iconName={'feedback'} />
+              <MenuIconButton title={'Policy'} iconName={'policy'} />
+            </HStack>
+          </VStack>
+        </Center>
       </Container>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -174,12 +234,36 @@ function InputButton({onPress, Icon, value, placeholder}) {
           <Heading
             size={'sm'}
             fontWeight={500}
+            textTransform={'capitalize'}
             color={value ? 'black' : 'muted.400'}>
             {value ? value : placeholder}
           </Heading>
         </HStack>
       </Box>
     </Pressable>
+  );
+}
+
+function MenuIconButton({title, iconName, as}) {
+  return (
+    <Box>
+      <IconButton
+        size={'20'}
+        bgColor={'primary.50'}
+        borderColor={'primary.800'}
+        borderWidth={1}
+        variant="solid"
+        _icon={{
+          color: 'secondary.600',
+          size: '2xl',
+          as: as ? as : MaterialIcons,
+          name: iconName,
+        }}
+      />
+      <Text w="100%" textAlign={'center'}>
+        {title}
+      </Text>
+    </Box>
   );
 }
 
