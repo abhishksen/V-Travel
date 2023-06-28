@@ -16,6 +16,8 @@ const routeNames = {
           MEDICAL_EMERGENCY: 'Medical Emergency',
         },
       },
+      BLOGS: 'Blogs',
+      SINGLE_BLOG: 'Single Blog',
     },
   },
   LOGIN: {

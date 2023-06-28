@@ -8,13 +8,13 @@ import Search from '../screens/Search';
 import BusNumSearch from '../screens/BusNumSearch';
 import BusStationSearch from '../screens/StationSearch';
 import BusList from '../screens/BusList';
+import Blogs from '../screens/Blogs';
+import SingleBlog from '../screens/SingleBlog';
 import BusResult from '../routes/BusResult.routes';
 
 import routeNames from '../constants/routeNames';
 import colors from '../constants/colors';
 import useFetchBuses from '../hooks/useFetchBuses';
-
-import logo from '../assets/images/vlogo.jpg';
 
 const Stack = createStackNavigator();
 
@@ -36,6 +36,14 @@ const App = () => {
       <Stack.Screen
         options={{
           title: 'Vedanta Baitho',
+
+          headerLeftContainerStyle: {
+            marginLeft: 6,
+          },
+
+          headerRightContainerStyle: {
+            marginRight: 8,
+          },
 
           headerRight: () => {
             return (
@@ -86,11 +94,25 @@ const App = () => {
         component={BusList}
       />
       <Stack.Screen
-        options={({route, navigation}) => ({
+        options={({route}) => ({
           title: route.params.id + ' - ' + route.params.title,
         })}
         name={routeNames.HOME.SUB_ROUTES.BUS_RESULT.NAME}
         component={BusResult}
+      />
+      <Stack.Screen
+        options={{
+          title: 'Vedanta Blogs',
+        }}
+        name={routeNames.HOME.SUB_ROUTES.BLOGS}
+        component={Blogs}
+      />
+      <Stack.Screen
+        options={({route}) => ({
+          title: route.params.title,
+        })}
+        name={routeNames.HOME.SUB_ROUTES.SINGLE_BLOG}
+        component={SingleBlog}
       />
     </Stack.Navigator>
   );
