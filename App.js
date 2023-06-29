@@ -4,6 +4,7 @@ import {NativeBaseProvider} from 'native-base';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
+import SplashScreen from 'react-native-splash-screen';
 
 import Login from './screens/Login';
 import HomeRoutes from './routes/Home.routes';
@@ -30,6 +31,8 @@ const App = () => {
         dispatch(setUser(null));
       }
     });
+
+    SplashScreen.hide();
     return subscriber; // unsubscribe on unmount
   }, []);
 

@@ -1,5 +1,5 @@
 {
-  "name": "baitho",
+  "name": "Vedanta Baitho",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -32,6 +32,7 @@
     "react-native-safe-area-context": "^3.4.1",
     "react-native-screens": "^3.20.0",
     "react-native-snap-carousel": "^3.9.1",
+    "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.1.1",
     "react-native-tab-view": "^3.5.1",
     "react-native-timeline-flatlist": "^0.8.0",

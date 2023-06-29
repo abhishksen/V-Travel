@@ -103,7 +103,6 @@ const Search = ({navigation}) => {
             source={fullvlogo}
             w="100%"
             h={'100%'}
-            // size={'full'}
             resizeMethod="scale"
             resizeMode="center"
             borderRadius={'3xl'}
@@ -122,9 +121,6 @@ const Search = ({navigation}) => {
             padding={5}
             borderRadius={'xl'}>
             <Center h="100%">
-              <Box w="100%" mb={3}>
-                <Heading fontWeight={400}>Search Bus</Heading>
-              </Box>
               <Stack w="100%" space={4}>
                 <InputButton
                   Icon={<Icon as={FontAwesome} name={'bus'} />}
@@ -181,13 +177,8 @@ const Search = ({navigation}) => {
 
       {/* blogs and menu*/}
       <Container h="55%" px={6} bgColor="white">
-        {/* <Stack space={6}>
-          {bus_data.map((e, i) => (
-            <BusCard key={i} num={e.id} title={e.title} status={e.status} />
-          ))}
-        </Stack> */}
-
         <VStack h="100%">
+          {/* Blogs */}
           <VStack space={3} w="100%">
             <HStack
               w="100%"
@@ -231,10 +222,9 @@ const Search = ({navigation}) => {
               />
             </Box>
           </VStack>
+
+          {/* Menu */}
           <VStack w="100%">
-            {/* <Box w="100%">
-              <Heading fontWeight={500}>Important Links</Heading>
-            </Box> */}
             <HStack justifyContent={'space-between'} w="100%">
               <MenuIconButton
                 title={'About Us'}
@@ -277,6 +267,7 @@ const Search = ({navigation}) => {
           </VStack>
         </VStack>
 
+        {/* Support contact */}
         <SuportDialogue
           isOpen={openSupport}
           onClose={() => setopenSupport(false)}
