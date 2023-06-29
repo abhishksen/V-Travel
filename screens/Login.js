@@ -1,8 +1,21 @@
-import {Text, Image, Center, Heading, Box, View, HStack} from 'native-base';
+import {
+  Text,
+  Image,
+  Center,
+  Heading,
+  Box,
+  View,
+  HStack,
+  Spinner,
+} from 'native-base';
 import auth from '@react-native-firebase/auth';
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import Container from '../components/Container';
+import RenderWhen from '../components/RenderWhen';
+import useAuth from '../hooks/useAuth';
+import {setLoading} from '../redux/reducers/authReducer';
 import loginImage from '../assets/images/login.png';
 import logo from '../assets/images/vlogo.jpg';
 
@@ -17,8 +30,13 @@ GoogleSignin.configure({
 });
 
 const Login = () => {
-  const [isLoading, setisLoading] = useState(false);
+  const {isLoading} = useAuth();
+  const dispatch = useDispatch();
   const [errMsg, seterrMsg] = useState('');
+
+  function setisLoading(bool) {
+    dispatch(setLoading(bool));
+  }
 
   async function onGoogleButtonPress() {
     try {
@@ -74,6 +92,12 @@ const Login = () => {
         borderTopRadius={'80'}
         borderWidth={2}>
         <Center>
+          <RenderWhen isTrue={isLoading}>
+            <HStack space={2}>
+              <Spinner color={'white'} />
+              <Text color={'white'}>Logging you in..</Text>
+            </HStack>
+          </RenderWhen>
           <Heading color={'#fff'} fontWeight={600} mb={3} size={'lg'}>
             Login To Start Tracking!
           </Heading>

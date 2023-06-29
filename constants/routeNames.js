@@ -20,6 +20,15 @@ const routeNames = {
       SINGLE_BLOG: 'Single Blog',
     },
   },
+  CHOOSE_SERVICE: {
+    NAME: 'Choose Service',
+  },
+  INTERNAL: {
+    NAME: 'Internal Service',
+    SUB_ROUTES: {
+      HOME: 'Home',
+    },
+  },
   LOGIN: {
     NAME: 'Login',
   },
