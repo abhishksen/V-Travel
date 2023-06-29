@@ -1,8 +1,5 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HStack, IconButton, Image, Menu} from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import auth from '@react-native-firebase/auth';
 
 import Search from '../screens/Search';
 import BusNumSearch from '../screens/BusNumSearch';
@@ -10,6 +7,8 @@ import BusStationSearch from '../screens/StationSearch';
 import BusList from '../screens/BusList';
 import Blogs from '../screens/Blogs';
 import SingleBlog from '../screens/SingleBlog';
+import HeaderRight from '../components/HeaderRight';
+
 import BusResult from '../routes/BusResult.routes';
 
 import routeNames from '../constants/routeNames';
@@ -45,29 +44,7 @@ const App = () => {
             marginRight: 8,
           },
 
-          headerRight: () => {
-            return (
-              <Menu
-                w="190"
-                mr={4}
-                trigger={triggerProps => {
-                  return (
-                    <IconButton
-                      {...triggerProps}
-                      size={'md'}
-                      variant="solid"
-                      mr={4}
-                      _icon={{
-                        as: MaterialCommunityIcons,
-                        name: 'face-man-profile',
-                      }}
-                    />
-                  );
-                }}>
-                <Menu.Item onPress={() => auth().signOut()}>Logout</Menu.Item>
-              </Menu>
-            );
-          },
+          headerRight: HeaderRight,
         }}
         name={routeNames.HOME.SUB_ROUTES.SEARCH}
         component={Search}

@@ -34,6 +34,7 @@ const App = () => {
             email: user.email,
             uid: user.uid,
             service_type: do_exists ? 'internal' : 'external',
+            is_registered_member: do_exists,
             isLoggedIn: true,
             isLoading: false,
           }),

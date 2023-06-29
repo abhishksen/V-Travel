@@ -1,10 +1,8 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HStack, IconButton, Image, Menu} from 'native-base';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import auth from '@react-native-firebase/auth';
 
 import Home from '../screens/Internal/Home';
+import HeaderRight from '../components/HeaderRight';
 
 import routeNames from '../constants/routeNames';
 import colors from '../constants/colors';
@@ -39,29 +37,7 @@ const InternalRoutes = () => {
             marginRight: 8,
           },
 
-          headerRight: () => {
-            return (
-              <Menu
-                w="190"
-                mr={4}
-                trigger={triggerProps => {
-                  return (
-                    <IconButton
-                      {...triggerProps}
-                      size={'md'}
-                      variant="solid"
-                      mr={4}
-                      _icon={{
-                        as: MaterialCommunityIcons,
-                        name: 'face-man-profile',
-                      }}
-                    />
-                  );
-                }}>
-                <Menu.Item onPress={() => auth().signOut()}>Logout</Menu.Item>
-              </Menu>
-            );
-          },
+          headerRight: HeaderRight,
         }}
         name={routeNames.INTERNAL.SUB_ROUTES.HOME}
         component={Home}
