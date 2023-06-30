@@ -5,6 +5,7 @@ import searchReducer from './searchReducer';
 import stopsReducer from './stops.reducer';
 import busesReducer from './buses.reducer';
 import buses_with_stopsReducer from './buses_with_stops.reducer';
+import internalSearchDataReducer from './internalSearchData.reducer';
 
 export default combineReducers({
   auth: authReducer,
@@ -12,4 +13,5 @@ export default combineReducers({
   stops: stopsReducer,
   buses: busesReducer,
   buses_with_stops: buses_with_stopsReducer,
+  internalSearchData: internalSearchDataReducer,
 });

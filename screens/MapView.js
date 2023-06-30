@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useEffect} from 'react';
 import {StyleSheet} from 'react-native';
 import RNMapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -18,6 +18,8 @@ const MapView = ({route}) => {
   const {isLoading, stops} = useFetchStops(bus_number);
 
   const deltaRef = useRef({latitudeDelta: 0.0092, longitudeDelta: 0.0091});
+  const mapViewRef = useRef(null);
+
   const onRgionChange = region => {
     deltaRef.current = {
       latitudeDelta: region.latitudeDelta,
@@ -25,9 +27,16 @@ const MapView = ({route}) => {
     };
   };
 
+  useEffect(() => {
+    if (stops.length) {
+      mapViewRef.current.fitToElements();
+    }
+  }, [stops]);
+
   return (
     <Container h="100%">
       <RNMapView
+        ref={c => (mapViewRef.current = c)}
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         region={{

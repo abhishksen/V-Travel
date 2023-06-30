@@ -1,12 +1,200 @@
-import {View, Text} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  Pressable,
+  Box,
+  HStack,
+  Heading,
+  Icon,
+  Center,
+  Spinner,
+  VStack,
+  Button,
+} from 'native-base';
+import React, {useRef, useState, useEffect} from 'react';
+import {StyleSheet} from 'react-native';
+import RNMapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useNavigation} from '@react-navigation/native';
+import MapViewDirections from 'react-native-maps-directions';
+
+import useCoords from '../../hooks/useCoords';
+import useInternalSearchData from '../../hooks/useInternalSearchData';
+import routeNames from '../../constants/routeNames';
+import configs from '../../configs';
+
+import Container from '../../components/Container';
+import RenderWhen from '../../components/RenderWhen';
 
 const Home = () => {
+  const current_loc = useCoords();
+  const {data, setreset, setSource} = useInternalSearchData();
+
+  const navigation = useNavigation();
+  const deltaRef = useRef({latitudeDelta: 0.0092, longitudeDelta: 0.0091});
+  const mapViewRef = useRef(null);
+
+  const onRgionChange = region => {
+    deltaRef.current = {
+      latitudeDelta: region.latitudeDelta,
+      longitudeDelta: region.longitudeDelta,
+    };
+  };
+
+  useEffect(() => {
+    if (mapViewRef.current && data.source) {
+      const coordinates = [];
+
+      coordinates[0] = {
+        latitude: data.source.coords.latitude,
+        longitude: data.source.coords.longitude,
+      };
+
+      if (data.dest) {
+        coordinates[1] = {
+          latitude: data.dest.coords.latitude,
+          longitude: data.dest.coords.longitude,
+        };
+      }
+
+      mapViewRef.current.fitToCoordinates(coordinates, {
+        edgePadding: {top: 10, right: 80, bottom: 10, left: 80},
+        animated: true,
+      });
+    } else {
+      setSource({
+        title: 'Current Location',
+        coords: {
+          latitude: current_loc.latitude,
+          longitude: current_loc.longitude,
+        },
+      });
+    }
+  }, [data.source, data.dest, current_loc]);
+
+  console.log('render');
+
+  if (!current_loc.latitude) {
+    return (
+      <Center w="100%" h="100%">
+        <Spinner />
+        <Heading>Loading...</Heading>
+      </Center>
+    );
+  }
+
   return (
-    <View>
-      <Text>Home</Text>
+    <View h="100%">
+      <RenderWhen isTrue={current_loc.latitude}>
+        <RNMapView
+          ref={r => (mapViewRef.current = r)}
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          initialRegion={{
+            latitude: current_loc.latitude,
+            longitude: current_loc.longitude,
+            latitudeDelta: deltaRef.current.latitudeDelta,
+            longitudeDelta: deltaRef.current.longitudeDelta,
+          }}
+          onRegionChange={onRgionChange}
+          moveOnMarkerPress={false}
+          showsUserLocation
+          loadingEnabled>
+          {data.dest ? (
+            <Marker
+              coordinate={{
+                latitude: data.dest.coords.latitude,
+                longitude: data.dest.coords.longitude,
+              }}
+              title={'Drop Off Point'}
+            />
+          ) : null}
+
+          {data.dest ? (
+            <MapViewDirections
+              origin={data.source.coords}
+              destination={data.dest.coords}
+              apikey={configs.GOOGLE_MAP_API_KEY}
+              strokeWidth={3}
+              strokeColor="hotpink"
+            />
+          ) : null}
+        </RNMapView>
+      </RenderWhen>
+
+      <Container padding={0} h="100%" w="100%">
+        <VStack padding={4} space={3}>
+          <InputButton
+            Icon={<Icon as={FontAwesome} name={'circle-o'} />}
+            placeholder={'Choose Your Pick up point'}
+            value={data.source?.title}
+            onPress={() =>
+              navigation.navigate(
+                routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH,
+                {type: 'src'},
+              )
+            }
+          />
+          <InputButton
+            Icon={<Icon as={MaterialIcons} name={'location-pin'} />}
+            placeholder={'Choose Your drop off point'}
+            value={data.dest?.title}
+            onPress={() =>
+              navigation.navigate(
+                routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH,
+                {type: 'dest'},
+              )
+            }
+          />
+        </VStack>
+
+        <RenderWhen isTrue={Boolean(data.dest && data.source)}>
+          <VStack
+            space={3}
+            position={'absolute'}
+            w="100%"
+            padding={2}
+            bottom={0}>
+            <Button colorScheme={'secondary'}>Book Ride</Button>
+            <Button colorScheme={'muted'} onPress={setreset}>
+              Cancel
+            </Button>
+          </VStack>
+        </RenderWhen>
+      </Container>
     </View>
   );
 };
 
 export default Home;
+
+function InputButton({onPress, Icon, value, placeholder}) {
+  return (
+    <Pressable onPress={onPress}>
+      <Box w="100%" bgColor={'primary.50'} padding={3} borderRadius={'md'}>
+        <HStack alignItems={'center'} space={2}>
+          {Icon}
+          <Heading
+            size={'sm'}
+            fontWeight={500}
+            textTransform={'capitalize'}
+            color={value ? 'black' : 'muted.400'}>
+            {value ? value : placeholder}
+          </Heading>
+        </HStack>
+      </Box>
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+  map: {
+    ...StyleSheet.absoluteFillObject,
+  },
+});

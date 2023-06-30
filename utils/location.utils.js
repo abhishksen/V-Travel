@@ -1,3 +1,42 @@
+import Geolocation from 'react-native-geolocation-service';
+import {PermissionsAndroid} from 'react-native';
+
+export const requestLocationPermission = () =>
+  new Promise((resolve, reject) => {
+    const permission = PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION;
+
+    PermissionsAndroid.request(permission)
+      .then(granted => {
+        if (granted === 'granted') {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      })
+      .catch(e => {
+        reject(e);
+      });
+  });
+
+export const getCurrentLocation = () =>
+  new Promise((resolve, reject) => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const cords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          heading: position?.coords?.heading,
+          speed: position.coords.speed,
+        };
+        resolve(cords);
+      },
+      error => {
+        reject(error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
+  });
+
 export function haversine(lat1, lon1, lat2, lon2) {
   /**
    * Calculate the great circle distance between two points

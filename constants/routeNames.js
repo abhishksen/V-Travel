@@ -27,6 +27,7 @@ const routeNames = {
     NAME: 'Internal Service',
     SUB_ROUTES: {
       HOME: 'Home',
+      STATION_SEARCH: 'Search Stop',
     },
   },
   LOGIN: {
