@@ -1,6 +1,5 @@
 import {
   View,
-  Text,
   Pressable,
   Box,
   HStack,
@@ -10,8 +9,9 @@ import {
   Spinner,
   VStack,
   Button,
+  Text,
 } from 'native-base';
-import React, {useRef, useState, useEffect} from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import RNMapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -21,17 +21,25 @@ import MapViewDirections from 'react-native-maps-directions';
 
 import useCoords from '../../hooks/useCoords';
 import useInternalSearchData from '../../hooks/useInternalSearchData';
+import useRideReq from '../../hooks/useRideReq';
+import useAuth from '../../hooks/useAuth';
 import routeNames from '../../constants/routeNames';
 import configs from '../../configs';
+import {add_request} from '../../utils/firestore.utils';
 
 import Container from '../../components/Container';
 import RenderWhen from '../../components/RenderWhen';
 
 const Home = () => {
   const current_loc = useCoords();
-  const {data, setreset, setSource} = useInternalSearchData();
+  const {data, setreset} = useInternalSearchData();
+  const {uid} = useAuth();
 
+  const ride_req_obj = useRideReq();
+
+  const [isRideReqLoading, setisRideReqLoading] = useState(false);
   const navigation = useNavigation();
+
   const deltaRef = useRef({latitudeDelta: 0.0092, longitudeDelta: 0.0091});
   const mapViewRef = useRef(null);
 
@@ -40,6 +48,31 @@ const Home = () => {
       latitudeDelta: region.latitudeDelta,
       longitudeDelta: region.longitudeDelta,
     };
+  };
+
+  const make_ride_req = async () => {
+    setisRideReqLoading(true);
+    await add_request(
+      {
+        pick_up_loc: {
+          title: data.source.title,
+          latitude: data.source.coords.latitude,
+          longitude: data.source.coords.longitude,
+        },
+
+        drop_off_loc: {
+          title: data.dest.title,
+          latitude: data.dest.coords.latitude,
+          longitude: data.dest.coords.longitude,
+        },
+
+        status: 'pending',
+        uid,
+      },
+      uid,
+    );
+    setisRideReqLoading(false);
+    setreset();
   };
 
   useEffect(() => {
@@ -114,30 +147,50 @@ const Home = () => {
       </RenderWhen>
 
       <Container padding={0} h="100%" w="100%">
-        <VStack padding={4} space={3}>
-          <InputButton
-            Icon={<Icon as={FontAwesome} name={'circle-o'} />}
-            placeholder={'Choose Your Pick up point'}
-            value={data.source?.title}
-            onPress={() =>
-              navigation.navigate(
-                routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH,
-                {type: 'src'},
-              )
-            }
-          />
-          <InputButton
-            Icon={<Icon as={MaterialIcons} name={'location-pin'} />}
-            placeholder={'Choose Your drop off point'}
-            value={data.dest?.title}
-            onPress={() =>
-              navigation.navigate(
-                routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH,
-                {type: 'dest'},
-              )
-            }
-          />
-        </VStack>
+        <RenderWhen isTrue={!ride_req_obj}>
+          <VStack padding={4} space={3}>
+            <InputButton
+              Icon={<Icon as={FontAwesome} name={'circle-o'} />}
+              placeholder={'Choose Your Pick up point'}
+              value={data.source?.title}
+              onPress={() =>
+                navigation.navigate(
+                  routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH,
+                  {type: 'src'},
+                )
+              }
+            />
+            <InputButton
+              Icon={<Icon as={MaterialIcons} name={'location-pin'} />}
+              placeholder={'Choose Your drop off point'}
+              value={data.dest?.title}
+              onPress={() =>
+                navigation.navigate(
+                  routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH,
+                  {type: 'dest'},
+                )
+              }
+            />
+          </VStack>
+        </RenderWhen>
+
+        <RenderWhen isTrue={ride_req_obj}>
+          <VStack
+            space={3}
+            position={'absolute'}
+            w="100%"
+            bottom={0}
+            padding={8}>
+            <Box bgColor={'secondary.50'} padding={3}>
+              <Center w="100%" my={3}>
+                <Heading fontWeight={500}>Your ride is under request</Heading>
+              </Center>
+              <HStack>
+                <Text>{ride_req_obj?.drop_off_loc?.title}</Text>
+              </HStack>
+            </Box>
+          </VStack>
+        </RenderWhen>
 
         <RenderWhen isTrue={Boolean(data.dest && data.source)}>
           <VStack
@@ -146,7 +199,12 @@ const Home = () => {
             w="100%"
             padding={2}
             bottom={0}>
-            <Button colorScheme={'secondary'}>Book Ride</Button>
+            <Button
+              isLoading={isRideReqLoading}
+              colorScheme={'secondary'}
+              onPress={make_ride_req}>
+              Book Ride
+            </Button>
             <Button colorScheme={'muted'} onPress={setreset}>
               Cancel
             </Button>
