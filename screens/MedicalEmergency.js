@@ -19,6 +19,7 @@ import Container from '../components/Container';
 
 import colors from '../constants/colors';
 import useFetchStopMeds from '../hooks/useFetchStopMeds';
+import RenderWhen from '../components/RenderWhen';
 
 const MedicalEmergency = ({route}) => {
   const bus_number = route.params.bus_number;
@@ -54,6 +55,18 @@ function renderDetail(rowData) {
         {rowData.stop.title}
       </Heading>
       <VStack my={5} space={3}>
+        <RenderWhen
+          isTrue={!rowData.stop.hospitals || !rowData.stop.hospitals.length}>
+          <Box
+            borderRadius={'lg'}
+            padding={3}
+            bgColor={'primary.50'}
+            shadow={7}>
+            <Text marginBottom={-1} fontSize={16}>
+              No medical service is available at this stop
+            </Text>
+          </Box>
+        </RenderWhen>
         {rowData.stop.hospitals.map((e, i) => (
           <Box
             key={i}
@@ -61,22 +74,29 @@ function renderDetail(rowData) {
             padding={3}
             bgColor={'primary.50'}
             shadow={7}>
-            <Text marginBottom={-1} fontSize={18}>
-              {e.title}
-            </Text>
-            <Text fontSize={16}>{e.address}</Text>
-            <Pressable onPress={() => Linking.openURL(`tel:${e.phone}`)}>
-              <Badge
-                borderRadius={'md'}
-                bgColor={'secondary.500'}
-                leftIcon={
-                  <Icon as={MaterialIcons} name="call" color={'white'} />
-                }
-                _text={{color: 'white'}}
-                w="50%">
-                {`91 ${e.phone}`}
-              </Badge>
-            </Pressable>
+            <RenderWhen isTrue={!e.phone}>
+              <Text marginBottom={-1} fontSize={16}>
+                No medical service is available at this stop
+              </Text>
+            </RenderWhen>
+            <RenderWhen isTrue={e.phone}>
+              <Text marginBottom={-1} fontSize={18}>
+                {e.title}
+              </Text>
+              <Text fontSize={16}>{e.address}</Text>
+              <Pressable onPress={() => Linking.openURL(`tel:${e.phone}`)}>
+                <Badge
+                  borderRadius={'md'}
+                  bgColor={'secondary.500'}
+                  leftIcon={
+                    <Icon as={MaterialIcons} name="call" color={'white'} />
+                  }
+                  _text={{color: 'white'}}
+                  w="50%">
+                  {`91 ${e.phone}`}
+                </Badge>
+              </Pressable>
+            </RenderWhen>
           </Box>
         ))}
       </VStack>

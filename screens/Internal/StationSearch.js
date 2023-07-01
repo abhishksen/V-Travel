@@ -66,7 +66,7 @@ const StationSearch = ({navigation, route}) => {
             color: 'black',
           },
         }}
-        currentLocation={true}
+        currentLocation={type === 'src'}
         fetchDetails
         currentLocationLabel="Current location"
       />

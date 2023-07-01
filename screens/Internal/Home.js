@@ -62,18 +62,8 @@ const Home = () => {
         edgePadding: {top: 10, right: 80, bottom: 10, left: 80},
         animated: true,
       });
-    } else {
-      setSource({
-        title: 'Current Location',
-        coords: {
-          latitude: current_loc.latitude,
-          longitude: current_loc.longitude,
-        },
-      });
     }
   }, [data.source, data.dest, current_loc]);
-
-  console.log('render');
 
   if (!current_loc.latitude) {
     return (
