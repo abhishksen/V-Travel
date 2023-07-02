@@ -33,3 +33,8 @@ export async function add_request(data = {}, uid = '') {
     .update(data);
   return true;
 }
+
+export async function del_request(uid = '') {
+  await firestore().collection(ride_req_stack_schema.name).doc(uid).delete();
+  return true;
+}

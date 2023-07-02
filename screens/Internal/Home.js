@@ -25,7 +25,8 @@ import useRideReq from '../../hooks/useRideReq';
 import useAuth from '../../hooks/useAuth';
 import routeNames from '../../constants/routeNames';
 import configs from '../../configs';
-import {add_request} from '../../utils/firestore.utils';
+import {add_request, del_request} from '../../utils/firestore.utils';
+import {haversine} from '../../utils/location.utils';
 
 import Container from '../../components/Container';
 import RenderWhen from '../../components/RenderWhen';
@@ -38,6 +39,7 @@ const Home = () => {
   const ride_req_obj = useRideReq();
 
   const [isRideReqLoading, setisRideReqLoading] = useState(false);
+  const [isCancelReqLoading, setisCancelReqLoading] = useState(false);
   const navigation = useNavigation();
 
   const deltaRef = useRef({latitudeDelta: 0.0092, longitudeDelta: 0.0091});
@@ -52,6 +54,12 @@ const Home = () => {
 
   const make_ride_req = async () => {
     setisRideReqLoading(true);
+    distance = haversine(
+      data.source.coords.latitude,
+      data.source.coords.longitude,
+      data.dest.coords.latitude,
+      data.dest.coords.longitude,
+    ).toFixed(2);
     await add_request(
       {
         pick_up_loc: {
@@ -68,12 +76,20 @@ const Home = () => {
 
         status: 'pending',
         uid,
+        distance,
       },
       uid,
     );
     setisRideReqLoading(false);
-    setreset();
   };
+
+  const cancel_request = async () => {
+    setisCancelReqLoading(true);
+    await del_request(uid);
+    setisCancelReqLoading(false);
+  };
+
+  let distance;
 
   useEffect(() => {
     if (mapViewRef.current && data.source) {
@@ -124,6 +140,15 @@ const Home = () => {
           moveOnMarkerPress={false}
           showsUserLocation
           loadingEnabled>
+          <RenderWhen isTrue={data.source}>
+            <Marker
+              coordinate={{
+                latitude: data.source?.coords.latitude,
+                longitude: data.source?.coords.longitude,
+              }}
+              title={'Pick Up Point'}
+            />
+          </RenderWhen>
           {data.dest ? (
             <Marker
               coordinate={{
@@ -181,18 +206,32 @@ const Home = () => {
             w="100%"
             bottom={0}
             padding={8}>
-            <Box bgColor={'secondary.50'} padding={3}>
-              <Center w="100%" my={3}>
+            <Box bgColor={'secondary.50'} borderRadius={'xl'} padding={3}>
+              <Center w="100%" my={4}>
+                <Icon
+                  as={MaterialIcons}
+                  name={'av-timer'}
+                  size={'2xl'}
+                  color={'black'}
+                />
                 <Heading fontWeight={500}>Your ride is under request</Heading>
+                <Heading size={'md'}>
+                  Finding the nearest driver please wait.
+                </Heading>
               </Center>
-              <HStack>
-                <Text>{ride_req_obj?.drop_off_loc?.title}</Text>
-              </HStack>
+              <VStack space={2}>
+                <Button
+                  isLoading={isCancelReqLoading}
+                  onPress={cancel_request}
+                  colorScheme={'muted'}>
+                  Cancel Request
+                </Button>
+              </VStack>
             </Box>
           </VStack>
         </RenderWhen>
 
-        <RenderWhen isTrue={Boolean(data.dest && data.source)}>
+        <RenderWhen isTrue={Boolean(data.dest && data.source) && !ride_req_obj}>
           <VStack
             space={3}
             position={'absolute'}

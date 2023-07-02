@@ -15,6 +15,7 @@ const ride_req_stack = {
     },
     status: 'status',
     uid: 'uid',
+    distance: 'distance',
   },
 };
 
