@@ -34,7 +34,7 @@ const App = () => {
       }}>
       <Stack.Screen
         options={{
-          title: 'Vedanta Baitho',
+          title: 'V-Travel',
 
           headerLeftContainerStyle: {
             marginLeft: 6,

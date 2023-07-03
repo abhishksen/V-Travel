@@ -28,7 +28,7 @@ const InternalRoutes = () => {
       }}>
       <Stack.Screen
         options={{
-          title: 'Vedanta Baitho - Internal Services',
+          title: 'V-Travel - Internal Services',
 
           headerLeftContainerStyle: {
             marginLeft: 6,

@@ -66,14 +66,11 @@ const Login = () => {
           <Box mb={3}>
             <Center flexDirection={'row'}>
               <Heading
-                color={'secondary.500'}
-                mr={1}
+                textAlign={'center'}
+                color={'primary.500'}
                 fontWeight={600}
                 size={'xl'}>
-                Vedanta
-              </Heading>
-              <Heading color={'primary.500'} fontWeight={600} size={'xl'}>
-                Baitho!
+                V-Travel
               </Heading>
             </Center>
             <Heading textAlign={'center'} fontWeight={600} size={'md'}>
