@@ -214,8 +214,10 @@ const Home = () => {
                   size={'2xl'}
                   color={'black'}
                 />
-                <Heading fontWeight={500}>Your ride is under request</Heading>
-                <Heading size={'md'}>
+                <Heading textAlign={'center'} fontWeight={500}>
+                  Your ride is under request
+                </Heading>
+                <Heading textAlign={'center'} size={'md'}>
                   Finding the nearest driver please wait.
                 </Heading>
               </Center>

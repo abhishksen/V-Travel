@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
 import SplashScreen from 'react-native-splash-screen';
+import messaging from '@react-native-firebase/messaging';
 
 import Login from './screens/Login';
 import HomeRoutes from './routes/Home.routes';
@@ -14,6 +15,7 @@ import routeNames from './constants/routeNames';
 
 import {setUser} from './redux/reducers/authReducer';
 import {doUserExists} from './utils/firestore.utils';
+import {notifHandler} from './utils/notif.utils';
 import useAuth from './hooks/useAuth';
 
 const Stack = createStackNavigator();
@@ -44,8 +46,13 @@ const App = () => {
       }
     });
 
+    const unsubscribenotif = messaging().onMessage(notifHandler);
+
     SplashScreen.hide();
-    return subscriber; // unsubscribe on unmount
+    return () => {
+      subscriber(); // unsubscribe on unmount
+      unsubscribenotif();
+    };
   }, []);
 
   return (

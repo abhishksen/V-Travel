@@ -2,6 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import org_members_schema from '../schemas/org_members.schema';
 import ride_req_stack_schema from '../schemas/ride_req_stack.schema';
+import stop_alerts_schema from '../schemas/stop_alerts.schema';
 
 export async function doUserExists(email = '') {
   const docref = await firestore()
@@ -36,5 +37,10 @@ export async function add_request(data = {}, uid = '') {
 
 export async function del_request(uid = '') {
   await firestore().collection(ride_req_stack_schema.name).doc(uid).delete();
+  return true;
+}
+
+export async function add_stop_alert(data = {}) {
+  await firestore().collection(stop_alerts_schema.name).add(data);
   return true;
 }
