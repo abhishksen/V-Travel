@@ -14,12 +14,14 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import notifee, {AndroidImportance} from '@notifee/react-native';
 import messaging from '@react-native-firebase/messaging';
+import moment from 'moment';
 
 import Container from '../components/Container';
 import RenderWhen from '../components/RenderWhen';
 
 import useLiveStatus from '../hooks/useLiveStatus';
 import {requestNotifPermission} from '../utils/notif.utils';
+import {formatDistance} from '../utils/location.utils';
 import {add_stop_alert} from '../utils/firestore.utils';
 
 const LiveStatus = ({route}) => {
@@ -114,10 +116,21 @@ const LiveStatus = ({route}) => {
 
                     <Box>
                       <Text>Reaching Next Stop</Text>
-                      <Text>
-                        <Text bold>{stage.distance_km} km away </Text>
-                      </Text>
-                      <Text bold>Est. Time: {stage.time_min} min </Text>
+                      {stage.distance_km ? (
+                        <Text>
+                          <Text bold>
+                            {formatDistance(stage.distance_km)} away
+                          </Text>
+                        </Text>
+                      ) : null}
+                      {stage.time_min ? (
+                        <Text bold>
+                          reaching in{' '}
+                          {moment
+                            .duration(stage.time_min, 'minutes')
+                            .humanize()}
+                        </Text>
+                      ) : null}
                     </Box>
                   </HStack>
 

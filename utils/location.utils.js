@@ -61,3 +61,20 @@ export function haversine(lat1, lon1, lat2, lon2) {
 
   return distance;
 }
+
+export function formatDistance(distance) {
+  if (!distance) {
+    return null;
+  }
+
+  distance = Number(distance);
+
+  if (distance < 1) {
+    // If the distance is less than 1 kilometer, convert it to meters
+    const meters = distance * 1000;
+    return `${meters} meters`;
+  } else {
+    // If the distance is 1 kilometer or more, keep it in kilometers
+    return `${distance.toFixed(2)} kilometers`;
+  }
+}

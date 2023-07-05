@@ -32,6 +32,9 @@ const useLiveStatus = (bus_number = 0) => {
         return {
           title: v.stop.title,
           is_halted: reached_stop_index === i,
+          stop: {
+            ...v.stop,
+          },
         };
       });
     } else {
