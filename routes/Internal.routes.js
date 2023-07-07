@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import Home from '../screens/Internal/Home';
 import StationSearch from '../screens/Internal/StationSearch';
+import RunningRide from '../screens/Internal/RunningRide';
 import HeaderRight from '../components/HeaderRight';
 
 import routeNames from '../constants/routeNames';
@@ -44,6 +45,10 @@ const InternalRoutes = () => {
         component={Home}
       />
 
+      <Stack.Screen
+        name={routeNames.INTERNAL.SUB_ROUTES.RUNNING_RIDE}
+        component={RunningRide}
+      />
       <Stack.Screen
         name={routeNames.INTERNAL.SUB_ROUTES.STATION_SEARCH}
         component={StationSearch}

@@ -28,6 +28,7 @@ const routeNames = {
     SUB_ROUTES: {
       HOME: 'Home',
       STATION_SEARCH: 'Search Stop',
+      RUNNING_RIDE: 'Running Ride',
     },
   },
   LOGIN: {

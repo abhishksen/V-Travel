@@ -9,13 +9,14 @@ import {
   Spinner,
   VStack,
   Button,
+  WarningOutlineIcon,
   Text,
 } from 'native-base';
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 import RNMapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useNavigation} from '@react-navigation/native';
 import MapViewDirections from 'react-native-maps-directions';
 
@@ -23,7 +24,10 @@ import useCoords from '../../hooks/useCoords';
 import useInternalSearchData from '../../hooks/useInternalSearchData';
 import useRideReq from '../../hooks/useRideReq';
 import useAuth from '../../hooks/useAuth';
+import useRunningRide from '../../hooks/useRunningRide';
+
 import routeNames from '../../constants/routeNames';
+import colors from '../../constants/colors';
 import configs from '../../configs';
 import {add_request, del_request} from '../../utils/firestore.utils';
 import {haversine} from '../../utils/location.utils';
@@ -33,10 +37,10 @@ import RenderWhen from '../../components/RenderWhen';
 
 const Home = () => {
   const current_loc = useCoords();
-  const {data, setreset} = useInternalSearchData();
+  const {data, setreset, setDest, setSource} = useInternalSearchData();
   const {uid} = useAuth();
-
   const ride_req_obj = useRideReq();
+  const running_ride = useRunningRide();
 
   const [isRideReqLoading, setisRideReqLoading] = useState(false);
   const [isCancelReqLoading, setisCancelReqLoading] = useState(false);
@@ -52,24 +56,27 @@ const Home = () => {
     };
   };
 
+  const handle_long_press = (e, curr_loc) => {
+    setDest({coords: e.nativeEvent.coordinate});
+    setSource({coords: {...curr_loc}});
+  };
+
   const make_ride_req = async () => {
     setisRideReqLoading(true);
     distance = haversine(
-      data.source.coords.latitude,
-      data.source.coords.longitude,
+      current_loc.latitude,
+      current_loc.longitude,
       data.dest.coords.latitude,
       data.dest.coords.longitude,
     ).toFixed(2);
     await add_request(
       {
         pick_up_loc: {
-          title: data.source.title,
-          latitude: data.source.coords.latitude,
-          longitude: data.source.coords.longitude,
+          latitude: current_loc.latitude,
+          longitude: current_loc.longitude,
         },
 
         drop_off_loc: {
-          title: data.dest.title,
           latitude: data.dest.coords.latitude,
           longitude: data.dest.coords.longitude,
         },
@@ -80,6 +87,14 @@ const Home = () => {
       },
       uid,
     );
+    setSource({
+      coords: {
+        latitude: current_loc.latitude,
+        longitude: current_loc.longitude,
+      },
+    });
+
+    console.log('source');
     setisRideReqLoading(false);
   };
 
@@ -91,28 +106,38 @@ const Home = () => {
 
   let distance;
 
-  useEffect(() => {
-    if (mapViewRef.current && data.source) {
-      const coordinates = [];
+  useFocusEffect(
+    useCallback(() => {
+      if (mapViewRef.current && data.source) {
+        const coordinates = [];
 
-      coordinates[0] = {
-        latitude: data.source.coords.latitude,
-        longitude: data.source.coords.longitude,
-      };
-
-      if (data.dest) {
-        coordinates[1] = {
-          latitude: data.dest.coords.latitude,
-          longitude: data.dest.coords.longitude,
+        coordinates[0] = {
+          latitude: data.source.coords.latitude,
+          longitude: data.source.coords.longitude,
         };
-      }
 
-      mapViewRef.current.fitToCoordinates(coordinates, {
-        edgePadding: {top: 10, right: 80, bottom: 10, left: 80},
-        animated: true,
-      });
-    }
-  }, [data.source, data.dest, current_loc]);
+        if (data.dest) {
+          coordinates[1] = {
+            latitude: data.dest.coords.latitude,
+            longitude: data.dest.coords.longitude,
+          };
+        }
+
+        mapViewRef.current.fitToCoordinates(coordinates, {
+          edgePadding: {top: 10, right: 80, bottom: 10, left: 80},
+          animated: true,
+        });
+      }
+    }, [data.source, data.dest, current_loc]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (running_ride) {
+        navigation.navigate(routeNames.INTERNAL.SUB_ROUTES.RUNNING_RIDE);
+      }
+    }, [running_ride, navigation]),
+  );
 
   if (!current_loc.latitude) {
     return (
@@ -137,18 +162,21 @@ const Home = () => {
             longitudeDelta: deltaRef.current.longitudeDelta,
           }}
           onRegionChange={onRgionChange}
+          onLongPress={e => handle_long_press(e, current_loc)}
           moveOnMarkerPress={false}
           showsUserLocation
           loadingEnabled>
-          <RenderWhen isTrue={data.source}>
+          {Boolean(data.source) ? (
             <Marker
               coordinate={{
                 latitude: data.source?.coords.latitude,
                 longitude: data.source?.coords.longitude,
               }}
               title={'Pick Up Point'}
+              pinColor={colors.secondary[900]}
             />
-          </RenderWhen>
+          ) : null}
+
           {data.dest ? (
             <Marker
               coordinate={{
@@ -174,7 +202,7 @@ const Home = () => {
       <Container padding={0} h="100%" w="100%">
         <RenderWhen isTrue={!ride_req_obj}>
           <VStack padding={4} space={3}>
-            <InputButton
+            {/* <InputButton
               Icon={<Icon as={FontAwesome} name={'circle-o'} />}
               placeholder={'Choose Your Pick up point'}
               value={data.source?.title}
@@ -184,8 +212,8 @@ const Home = () => {
                   {type: 'src'},
                 )
               }
-            />
-            <InputButton
+            /> */}
+            {/* <InputButton
               Icon={<Icon as={MaterialIcons} name={'location-pin'} />}
               placeholder={'Choose Your drop off point'}
               value={data.dest?.title}
@@ -195,7 +223,16 @@ const Home = () => {
                   {type: 'dest'},
                 )
               }
-            />
+            /> */}
+
+            <RenderWhen isTrue={!data.dest}>
+              <Box borderRadius={'md'} padding={4} w="100%" bgColor={'#fff'}>
+                <HStack space={1} alignItems={'center'} flexWrap={'wrap'}>
+                  <WarningOutlineIcon />
+                  <Text>Long press on the map to select your destination</Text>
+                </HStack>
+              </Box>
+            </RenderWhen>
           </VStack>
         </RenderWhen>
 
