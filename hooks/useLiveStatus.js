@@ -2,7 +2,6 @@ import {useEffect, useState} from 'react';
 
 import useBusStatus from './useBusStatus';
 import useFetchStops from './useFetchStops';
-import {haversine} from '../utils/location.utils';
 
 /**
  * @returns {{isLoading: Boolean, stops: Array, is_running: Boolean}}
@@ -15,6 +14,7 @@ const useLiveStatus = (bus_number = 0) => {
     is_halted_at_stop,
     distance_km,
     time_min,
+    current_location,
   } = useBusStatus(bus_number);
   const {stops, isLoading: isStopsLoading} = useFetchStops(bus_number);
 
@@ -44,7 +44,11 @@ const useLiveStatus = (bus_number = 0) => {
         {
           status: 'reaching',
           distance_km,
-          time_min,
+          time_min: current_location.speed
+            ? current_location.speed > 3
+              ? time_min
+              : undefined
+            : undefined,
         },
         ...directedStops.slice(data_card_index),
       ];
@@ -54,7 +58,7 @@ const useLiveStatus = (bus_number = 0) => {
 
     setdata(live_data);
     setLoading(false);
-  }, [stops, reached_stop_index, is_reverse]);
+  }, [stops, reached_stop_index, is_reverse, current_location.speed]);
 
   return {
     data,
